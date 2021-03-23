@@ -1,4 +1,8 @@
 // GENERATION
+
+// Concatenate the two parents' types in alphabetical order into a string, then use this map to find the value of the child's type. 
+// If the parents share the same type, then the child is will of that type too.
+
 const generationMap: {
     'darkwater': 'fire',
     'darklight': 'normal',
@@ -18,7 +22,10 @@ const generationMap: {
 }
 
 // ELEMENTS
-const elementIsWeakToThisElementMap: {
+
+// Use this map to find out an element's weakness to another element. For example, fire is weak to water, water is weak to grass, etc.
+
+const elementMap: {
     'fire': 'water',
     'water': 'grass',
     'grass': 'fire',
@@ -28,6 +35,9 @@ const elementIsWeakToThisElementMap: {
 }
 
 // OFFSPRING OUTPUT
+
+// Concatenate the two parents' evolution ranks in numerical order into a string, then use this map to find the value of the child's evolution rank.
+
 const offspringOutput: {
     '00': 1,
     '01': 1,
@@ -42,6 +52,9 @@ const offspringOutput: {
 }
 
 // MONS
+
+// Each mon has its name, battle stats, starting skills, type, and the evolution rank that ranges from 0 to 3.
+
 const monArray = [
     {
         name: "Salamander",
