@@ -5,7 +5,7 @@
 const generationMap: {
     'darkwater': 'fire',
     'darklight': 'normal',
-    'darknormal' 'normal',
+    'darknormal': 'normal',
     'darkgrass': 'water',
     'darkfire': 'grass',
     'firewater': 'dark',
