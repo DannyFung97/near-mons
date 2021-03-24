@@ -98,56 +98,56 @@ main.ts
 
    Return array list of creature objects owned by a user.
 
-      getCreaturesByOwner(owner: string): Creature[]
+      export function getCreaturesByOwner(owner: string): Creature[]
       
    Return array list of creature ids owned by a user, primarily a helper function for getCreaturesByOwner().
       
-      getCreatureIdsByOwner(owner: string): Array<string>
+      function getCreatureIdsByOwner(owner: string): Array<string>
       
    Procreate a new creature using two parent creatures.
 
-      procreateCreature(a: Creature, b: Creature): Creature
+      export function procreateCreature(a: Creature, b: Creature): Creature
    
    Generate a new creature, this is primarily a helperfunction to procreateCreature. In here, a new creature object is created, assigned a random ID, and set to an owner.
 
-      generateCreatureObject(
+      function generateCreatureObject(
          id: string, 
          name: string,
          atk: string,
          def: string,
          spd: string,
-         skills: Array<String>,
+         newSkills: Array<String>,
          element: string,
          evolutionRank: string,
       )
 
-   Set skills to a creature, primaily used for inheriting parent skills. The maximum number a creature can have is 6, this needs to be checked before this method.
+   Set skills to a creature, primaily used for inheriting parent skills. The maximum number a creature can have is 6, this needs to be checked before this method. Helper function to generateCreatureObject().
 
-      setSkills(newSkills: Array<String>, id: string): void
+      function setSkills(newSkills: Array<String>, id: string): void
 
    Get the creature ids from the owner.
 
-      setCreatureIdsByOwner(owner: string): Array<string>
+      function getCreatureIdsByOwner(owner: string): Array<string>
 
    Assign the creature ids to the owner.
 
-      setCreatureIdsByOwner(owner: string, id: string): void
+      function setCreatureIdsByOwner(owner: string, id: string): void
 
    Delete the creature ids from the owner.
 
-      deleteCreatureIdsByOwner(owner: string, id: string): void
+      function deleteCreatureIdsByOwner(owner: string, id: string): void
 
    Get creature object by id.
 
-      getCreatureByid(id: string): Creature
+      export function getCreatureByid(id: string): Creature
 
    Set creature object by id.
 
-      setCreatureById(id: string, creature: Creature): void
+      function setCreatureById(id: string, creature: Creature): void
 
    Delete creature object by id.
 
-      deleteCreatureById(id: string): void
+      export function deleteCreatureById(id: string): void
 
    Random ID Generator.
 
