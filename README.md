@@ -1,101 +1,149 @@
 mons
 ==================
 
-This app was initialized with [create-near-app]
+This is an application that utilizes a smart contract that mints NFTs as ingame collectibles. Users can create new creatures by having two parent creatures procreate to form a child creature, which will inherit its parents' skills and attributes.
 
+Smart Contract API
+=====================
 
-Quick Start
-===========
+model.ts
+----------
 
-To run this project locally:
+   An array of all existing creatures as well as their metadata.
 
-1. Prerequisites: Make sure you've installed [Node.js] ≥ 12
-2. Install dependencies: `yarn install`
-3. Run the local development server: `yarn dev` (see `package.json` for a
-   full list of `scripts` you can run with `yarn`)
+      export const creaturesArray = [
+         {
+            name: "Salamander",
+            atk: '10',
+            def: '10',
+            spd: '20',
+            skills: ["firespark", "speedup"], 
+            type: "fire", 
+            evo: '0',
+      }, {...}, {...}, ... ]
 
-Now you'll have a local development environment backed by the NEAR TestNet!
+   An array of all existing skills with their names and descriptions.
 
-Go ahead and play with the app and the code. As you make code changes, the app will automatically reload.
+      export const skillsArray = [
+         {
+            name: 'fireguard', description: 'Resistance against fire damage.'
+         }, 
+         {...}, {...}, ... ]
 
+   A map of all type combinations during procreation. Concatenate the two parents' types in alphabetical order into a string, then use this map to find the value of the child's type. If the parents share the same type, then the child is will of that type too.
 
-Exploring The Code
-==================
+      export const generationMap = {'darkwater': 'fire', ... }
 
-1. The "backend" code lives in the `/contract` folder. See the README there for
-   more info.
-2. The frontend code lives in the `/src` folder. `/src/index.html` is a great
-   place to start exploring. Note that it loads in `/src/index.js`, where you
-   can learn how the frontend connects to the NEAR blockchain.
-3. Tests: there are different kinds of tests for the frontend and the smart
-   contract. See `contract/README` for info about how it's tested. The frontend
-   code gets tested with [jest]. You can run both of these at once with `yarn
-   run test`.
+   A map of all evolution combinations during procreation. Concatenate the two parents' evolution ranks in numerical order into a string, then use this map to find the value of the child's evolution rank.
 
+      export const offspringMap: {
+         '00': '1',
+         '01': '1',
+         '02': '1',
+         '03': '1',
+         '11': '2',
+         '12': '2',
+         '13': '2',
+         '22': '3',
+         '23': '3',
+         '33': '0',
+      }
 
-Deploy
-======
+   A map of for reference to elemental weaknesses. For example, fire is weak to water, water is weak to grass, etc.
 
-Every smart contract in NEAR has its [own associated account][NEAR accounts]. When you run `yarn dev`, your smart contract gets deployed to the live NEAR TestNet with a throwaway account. When you're ready to make it permanent, here's how.
+      export const elementMap: {
+         'fire': 'water',
+         'water': 'grass',
+         'grass': 'fire',
+         'light': 'dark',
+         'dark': 'light',
+         'normal': 'normal'
+      }
 
+      List of creature ids.
 
-Step 0: Install near-cli (optional)
--------------------------------------
+      export class CreatureList {
+         constructor(public id: Array<string>) {}
+      }
 
-[near-cli] is a command line interface (CLI) for interacting with the NEAR blockchain. It was installed to the local `node_modules` folder when you ran `yarn install`, but for best ergonomics you may want to install it globally:
+   Creature class that contains the creature's owner and metadata.
 
-    yarn install --global near-cli
+      export Creature class {
+         owner: string;
+         constructor (
+            public id: string,
+            public name: string,
+            public atk: string,
+            public def: string,
+            public spd: string,
+            public skills: Array<String>,
+            public element: string,
+            public evolutionRank: string,
+         ) {
+            this.owner = context.sender;
+         }
+      }
 
-Or, if you'd rather use the locally-installed version, you can prefix all `near` commands with `npx`
+   A persistent map that links creature id to creature object.
 
-Ensure that it's installed with `near --version` (or `npx near --version`)
+      export const creatures = new PersistentMap<string, Creature>('creatures');
 
+   A persistent map that links owner name to array of creature ids they own.
+         
+      export const creaturesByOwner = new PersistentMap<string, CreatureList>("creaturesByOwner")
 
-Step 1: Create an account for the contract
-------------------------------------------
+   
+main.ts
+----------
 
-Each account on NEAR can have at most one contract deployed to it. If you've already created an account such as `your-name.testnet`, you can deploy your contract to `mons.your-name.testnet`. Assuming you've already created an account on [NEAR Wallet], here's how to create `mons.your-name.testnet`:
+   Return array list of creature objects owned by a user.
 
-1. Authorize NEAR CLI, following the commands it gives you:
+      getCreaturesByOwner(owner: string): Creature[]
+      
+   Return array list of creature ids owned by a user, primarily a helper function for .
+      
+      getCreatureIdsByOwner(owner: string): Array<string>
+      
+   Procreate a new creature using two parent creatures.
 
-      near login
+      procreateCreature(a: Creature, b: Creature): Creature
+   
+   Generate a new creature, this is primarily a helperfunction to procreateCreature. In here, a new creature object is created, assigned an ID, and set to an owner.
 
-2. Create a subaccount (replace `YOUR-NAME` below with your actual account name):
+      generateCreate(
+         id: string, 
+         name: string,
+         atk: string,
+         def: string,
+         spd: string,
+         skills: Array<String>,
+         element: string,
+         evolutionRank: string,
+      )
 
-      near create-account mons.YOUR-NAME.testnet --masterAccount YOUR-NAME.testnet
+   Add skills to a creature, primaily used for inheriting parent skills. The maximum number a creature can have is 6, this needs to be checked before this method.
 
+      addSkills(skillsToAdd: Array<Skill>, creature: Creature): void
 
-Step 2: set contract name in code
----------------------------------
+   Set the owner of a creature.
 
-Modify the line in `src/config.js` that sets the account name of the contract. Set it to the account id you used above.
+      setCreaturesByOwner(owner: string, creature: Creature): void
 
-    const CONTRACT_NAME = process.env.CONTRACT_NAME || 'mons.YOUR-NAME.testnet'
+   Delete the creature from the owner.
 
+      deleteCreaturesByOwner(owner: string, creature: Creature): void
 
-Step 3: deploy!
----------------
+   Get creature by id.
 
-One command:
+      getCreature(id: string): Creature
 
-    yarn deploy
+   Set creature by id.
 
-As you can see in `package.json`, this does two things:
+      setCreature(id: string): Creature
 
-1. builds & deploys smart contract to NEAR TestNet
-2. builds & deploys frontend code to GitHub using [gh-pages]. This will only work if the project already has a repository set up on GitHub. Feel free to modify the `deploy` script in `package.json` to deploy elsewhere.
+   Random ID Generator.
 
-
-Troubleshooting
-===============
-
-On Windows, if you're seeing an error containing `EPERM` it may be related to spaces in your path. Please see [this issue](https://github.com/zkat/npx/issues/209) for more details.
-
-
-  [create-near-app]: https://github.com/near/create-near-app
-  [Node.js]: https://nodejs.org/en/download/package-manager/
-  [jest]: https://jestjs.io/
-  [NEAR accounts]: https://docs.near.org/docs/concepts/account
-  [NEAR Wallet]: https://wallet.testnet.near.org/
-  [near-cli]: https://github.com/near/near-cli
-  [gh-pages]: https://github.com/tschaub/gh-pages
+      function generateRandomId(): Uint8Array {
+         const ID_DIGITS: u32 = 16;
+         return base64.encode(math.randomBuffer(ID_DIGITS));
+      }
