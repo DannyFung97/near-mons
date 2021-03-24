@@ -121,9 +121,9 @@ main.ts
          evolutionRank: string,
       )
 
-   Add skills to a creature, primaily used for inheriting parent skills. The maximum number a creature can have is 6, this needs to be checked before this method.
+   Set skills to a creature, primaily used for inheriting parent skills. The maximum number a creature can have is 6, this needs to be checked before this method.
 
-      addSkills(skillsToAdd: Array<Skill>, creature: Creature): void
+      setSkills(newSkills: Array<String>, id: string): void
 
    Get the creature ids from the owner.
 
