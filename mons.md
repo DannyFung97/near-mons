@@ -305,4 +305,4 @@ const skills = [
     { name: 'attackdown', description: 'Decrease opponent attack temporarily.' },
     { name: 'defensedown', description: 'Decrease opponent defense temporarily.' },
     { name: 'speeddown', description: 'Decrease opponent speed temporarily.' },
-]{
+]
