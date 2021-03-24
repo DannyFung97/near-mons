@@ -125,6 +125,10 @@ index.ts
          newSkills: Array<String>,
       ): Creature
 
+   Function to give two creatures to the owner, should only be called if the owner does not have creatures.
+
+      export function giveCreaturesToOwner(): Array<Creature>
+
    Get the creature ids from the owner.
 
       function getCreatureIdsByOwner(owner: string): Array<string>

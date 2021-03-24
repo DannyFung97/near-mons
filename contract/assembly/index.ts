@@ -36,19 +36,19 @@ export function procreateCreature(newSkills: Array<String>, newCreature: SampleC
   );
 }
 
-export function previewFutureChildCreature(a_id: string, b_id: string): SampleCreature {
-  let a_parent = getCreatureById(a_id);
-  let b_parent = getCreatureById(b_id);
+export function previewFutureChildCreature(idA: string, idB: string): SampleCreature {
+  let parentA = getCreatureById(idA);
+  let parentB = getCreatureById(idB);
 
-  let child_evolutionRank = a_parent.evolutionRank < b_parent.evolutionRank ?
-    offspringMap[a_parent.evolutionRank.concat(b_parent.evolutionRank)] :
-    offspringMap[b_parent.evolutionRank.concat(a_parent.evolutionRank)];
+  let child_evolutionRank = parentA.evolutionRank < parentB.evolutionRank ?
+    offspringMap[parentA.evolutionRank.concat(parentB.evolutionRank)] :
+    offspringMap[parentB.evolutionRank.concat(parentA.evolutionRank)];
 
-  let child_element = a_parent.element < b_parent.element ?
-    generationMap[a_parent.element.concat(b_parent.element)] :
-    a_parent.element > b_parent.element ?
-    generationMap[b_parent.element.concat(a_parent.element)] :
-    a_parent.element;
+  let child_element = parentA.element < parentB.element ?
+    generationMap[parentA.element.concat(parentB.element)] :
+    parentA.element > parentB.element ?
+    generationMap[parentB.element.concat(parentA.element)] :
+    parentA.element;
 
   let newCreatureCandidates = creaturesArray.filter(creature =>
     (creature.evo === child_evolutionRank && creature.type === child_element));
@@ -78,6 +78,23 @@ function generateCreatureObject(
   setCreatureIdsByOwner(context.sender, id);
 
   return childCreature;
+}
+
+export function giveCreaturesToOwner(): Array<Creature> {
+  let randomSampleCreature1 = creaturesArray[(randomNum() / 100) * 6];
+  let randomSampleCreature2 = creaturesArray[(randomNum() / 100) * 6];
+
+  let id1 = generateRandomId();
+  let id2 = generateRandomId();
+
+  let newCreature1 = generateCreatureObject(id1, randomSampleCreature1, randomSampleCreature1.skills);
+  let newCreature2 = generateCreatureObject(id2, randomSampleCreature2, randomSampleCreature2.skills);
+
+  return [newCreature1, newCreature2];
+}
+
+export function getSampleCreatures(): Array<SampleCreature> {
+  return creaturesArray;
 }
 
 function getCreatureIdsByOwner(owner: string): Array<string> {
