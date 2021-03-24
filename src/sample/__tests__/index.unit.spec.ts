@@ -1,11 +1,12 @@
 import {
-  showYouKnow,
-  showYouKnow2,
-  sayHello,
-  sayMyName,
-  saveMyName,
-  saveMyMessage,
-  getAllMessages,
+  init,
+  getCreaturesByOwner,
+  procreateCreature,
+  previewFutureChildCreature,
+  giveCreaturesToOwner,
+  getSampleCreatures,
+  getCreatureById,
+  deleteCreatureById,
 } from "../assembly";
 import { storage, PersistentDeque, VMContext, VM } from "near-sdk-as";
 
