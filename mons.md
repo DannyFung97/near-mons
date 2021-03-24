@@ -1,5 +1,4 @@
 // GENERATION
-
 // Concatenate the two parents' types in alphabetical order into a string, then use this map to find the value of the child's type. 
 // If the parents share the same type, then the child is will of that type too.
 
@@ -22,7 +21,6 @@ const generationMap: {
 }
 
 // ELEMENTS
-
 // Use this map to find out an element's weakness to another element. For example, fire is weak to water, water is weak to grass, etc.
 
 const elementMap: {
@@ -35,7 +33,6 @@ const elementMap: {
 }
 
 // OFFSPRING OUTPUT
-
 // Concatenate the two parents' evolution ranks in numerical order into a string, then use this map to find the value of the child's evolution rank.
 
 const offspringOutput: {
@@ -52,7 +49,6 @@ const offspringOutput: {
 }
 
 // MONS
-
 // Each mon has its name, battle stats, starting skills, type, and the evolution rank that ranges from 0 to 3.
 
 const monArray = [
@@ -133,7 +129,7 @@ const monArray = [
         atk: '20',
         def: '20',
         spd: '20',
-        skills: ["homeadvantage", "grassguard"], 
+        skills: ["home advantage", "grassguard"], 
         type: "grass", 
         evo: '1',
     },
@@ -275,7 +271,6 @@ const monArray = [
 ]
 
 // SKILLS
-
 // Array of skills
 
 const skills = [
