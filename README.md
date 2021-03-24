@@ -60,9 +60,9 @@ model.ts
          'normal': 'normal'
       }
 
-      List of creature ids.
+   List of creature ids.
 
-      export class CreatureList {
+      export class CreatureIdList {
          constructor(public id: Array<string>) {}
       }
 
@@ -86,7 +86,7 @@ model.ts
 
    A persistent map that links creature id to creature object.
 
-      export const creatures = new PersistentMap<string, Creature>('creatures');
+      export const creaturesById = new PersistentMap<string, Creature>('creatures');
 
    A persistent map that links owner name to array of creature ids they own.
          
@@ -100,7 +100,7 @@ main.ts
 
       getCreaturesByOwner(owner: string): Creature[]
       
-   Return array list of creature ids owned by a user, primarily a helper function for .
+   Return array list of creature ids owned by a user, primarily a helper function for getCreaturesByOwner().
       
       getCreatureIdsByOwner(owner: string): Array<string>
       
@@ -108,9 +108,9 @@ main.ts
 
       procreateCreature(a: Creature, b: Creature): Creature
    
-   Generate a new creature, this is primarily a helperfunction to procreateCreature. In here, a new creature object is created, assigned an ID, and set to an owner.
+   Generate a new creature, this is primarily a helperfunction to procreateCreature. In here, a new creature object is created, assigned a random ID, and set to an owner.
 
-      generateCreate(
+      generateCreatureObject(
          id: string, 
          name: string,
          atk: string,
@@ -125,21 +125,29 @@ main.ts
 
       addSkills(skillsToAdd: Array<Skill>, creature: Creature): void
 
-   Set the owner of a creature.
+   Get the creature ids from the owner.
 
-      setCreaturesByOwner(owner: string, creature: Creature): void
+      setCreatureIdsByOwner(owner: string): Array<string>
 
-   Delete the creature from the owner.
+   Assign the creature ids to the owner.
 
-      deleteCreaturesByOwner(owner: string, creature: Creature): void
+      setCreatureIdsByOwner(owner: string, id: string): void
 
-   Get creature by id.
+   Delete the creature ids from the owner.
 
-      getCreature(id: string): Creature
+      deleteCreatureIdsByOwner(owner: string, id: string): void
 
-   Set creature by id.
+   Get creature object by id.
 
-      setCreature(id: string): Creature
+      getCreatureByid(id: string): Creature
+
+   Set creature object by id.
+
+      setCreatureById(id: string, creature: Creature): void
+
+   Delete creature object by id.
+
+      deleteCreatureById(id: string): void
 
    Random ID Generator.
 
