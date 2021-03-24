@@ -46,7 +46,9 @@ export function previewFutureChildCreature(a_id: string, b_id: string): SampleCr
 
   let child_element = a_parent.element < b_parent.element ?
     generationMap[a_parent.element.concat(b_parent.element)] :
-    generationMap[b_parent.element.concat(a_parent.element)];
+    a_parent.element > b_parent.element ?
+    generationMap[b_parent.element.concat(a_parent.element)] :
+    a_parent.element;
 
   let newCreatureCandidates = creaturesArray.filter(creature =>
     (creature.evo === child_evolutionRank && creature.type === child_element));
