@@ -30,7 +30,7 @@ model.ts
          }, 
          {...}, {...}, ... ]
 
-   A map of all type combinations during procreation. Concatenate the two parents' types in alphabetical order into a string, then use this map to find the value of the child's type. If the parents share the same type, then the child is will of that type too.
+   A map of all type combinations during procreation. Concatenate the two parents' types in alphabetical order into a string, then use this map to find the value of the child's type. If the parents share the same type, then the child will be of that type too.
 
       export const generationMap = {'darkwater': 'fire', ... }
 
@@ -49,7 +49,7 @@ model.ts
          '33': '0',
       }
 
-   A map of for reference to elemental weaknesses. For example, fire is weak to water, water is weak to grass, etc.
+   A map for reference to elemental weaknesses. For example, fire is weak to water, water is weak to grass, etc.
 
       export const elementMap: {
          'fire': 'water',
@@ -104,11 +104,11 @@ main.ts
       
       function getCreatureIdsByOwner(owner: string): Array<string>
       
-   Procreate a new creature using two parent creatures.
+   Procreate a new creature using two parent creatures while referencing them by ids.
 
-      export function procreateCreature(a: Creature, b: Creature): Creature
+      export function procreateCreature(a_id: string, b_id: string): Creature
    
-   Generate a new creature, this is primarily a helperfunction to procreateCreature. In here, a new creature object is created, assigned a random ID, and set to an owner.
+   Generate a new creature, this is primarily a helper function to procreateCreature(). In here, a new creature object is created, assigned a random ID, and set to an owner.
 
       function generateCreatureObject(
          id: string, 
