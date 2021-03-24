@@ -66,7 +66,7 @@ model.ts
             evo: '0',
       }, {...}, {...}, ... ]
 
-   An map of all existing skills with their names and descriptions.
+   A map of all existing skills with their names and descriptions.
 
       export const skillsMap: any = {
          'fireguard': { description: 'Resistance against fire damage.'},
@@ -108,14 +108,14 @@ index.ts
    Return array list of creature objects owned by a user.
 
       export function getCreaturesByOwner(owner: string): Creature[]
+
+   Function to let the user foresee what child creature they will get from procreation, along with their skills and attributes. From the user interface, after being viewed what child creature will result from both parents, the user can select which of the parents' skills the child will learn, and which of the child's skills it will forget.
+
+      export function previewFutureChildCreature(a_id: string, b_id: string): SampleCreature
       
    Procreate a new creature using the user's chosen skills, and the SampleCreature of the future child creature.
 
       export function procreateCreature(newSkills: Array<String>, newCreature: SampleCreature): Creature
-
-   Function to let the user see what child creature they will get from procreation. From the user interface, after being viewed what child creature will result from both parents, the user can select which of the parents' skills to inherit, and which of the child's skills it will forget.
-
-      export function previewFutureChildCreature(a_id: string, b_id: string): SampleCreature
    
    Generate a new creature, this is primarily a helper function to procreateCreature(). In here, a new creature object is created, assigned a random ID, and set to an owner.
 
