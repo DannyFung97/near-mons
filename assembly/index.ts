@@ -12,7 +12,7 @@ import {
   generationMap,
   offspringMap,
   initContract
-} from "./model";
+} from "./models";
 
 
 export function init(): void {
@@ -55,11 +55,6 @@ export function previewFutureChildCreature(idA: string, idB: string): SampleCrea
     parentA.element > parentB.element ?
     generationMap.getSome(parentB.element.concat(parentA.element)) :
     parentA.element.toString();
-
-  // let newCreatureCandidates = creaturesMap.filter(creature =>
-  //   (creature.evo === child_evolutionRank && creature.type === child_element));
-
-  // let newCreature = newCreatureCandidates[0];
 
   let newCreature = creaturesMap.getSome(child_element.concat(child_evolutionRank));
 

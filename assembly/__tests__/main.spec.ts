@@ -7,7 +7,7 @@ import {
   getSampleCreatures,
   getCreatureById,
   deleteCreatureById,
-} from "../assembly";
+} from "..";
 import { storage, PersistentDeque, VMContext, VM } from "near-sdk-as";
 
 const contract = "greeting";
