@@ -1,9 +1,9 @@
 import { context, logging, base64, math, PersistentVector, PersistentMap } from "near-sdk-as";
 
 import {
+  CreatureIdList,
   Creature,
   SampleCreature,
-  CreatureIdList,
   creaturesById,
   creaturesByOwner,
   creaturesMap,
@@ -32,13 +32,14 @@ export function getCreaturesByOwner(owner: string): Creature[] {
   return creaturesList;
 }
 
-export function procreateCreature(newSkills: Array<String>, newCreature: SampleCreature): Creature {
+export function procreateCreature(newSkills: Array<String>, newCreature: SampleCreature, owner: string): Creature {
   let child_id = generateRandomId();
 
   return generateCreatureObject(
     child_id,
     newCreature,
-    newSkills
+    newSkills,
+    owner
   );
 }
 
@@ -61,12 +62,13 @@ export function previewFutureChildCreature(idA: string, idB: string): SampleCrea
   return newCreature;
 }
 
-function generateCreatureObject(
+export function generateCreatureObject(
   id: string,
   newCreature: SampleCreature,
   newSkills: Array<String>,
+  owner: string
 ): Creature {
-  let childCreature = new Creature(
+  let creature = new Creature(
     id,
     newCreature.name,
     newCreature.atk,
@@ -77,40 +79,45 @@ function generateCreatureObject(
     newCreature.evo
   );
 
-  setCreatureById(id, childCreature);
-  setCreatureIdsByOwner(context.sender, id);
+  setCreatureById(id, creature);
+  setCreatureIdsByOwner(owner, id);
 
-  return childCreature;
+  return creature;
 }
 
-export function giveSpecificCreaturesToOwner(id_1: string, id_2: string): Array<Creature> {
+export function giveSpecificCreaturesToOwner(id_1: string, id_2: string, owner:string): Array<Creature> {
   let parentCreature1: SampleCreature = creaturesMap.getSome(id_1);
   let parentCreature2: SampleCreature = creaturesMap.getSome(id_2);
 
   let id1 = generateRandomId();
   let id2 = generateRandomId();
 
-  let newCreature1 = generateCreatureObject(id1, parentCreature1, parentCreature1.skills);
-  let newCreature2 = generateCreatureObject(id2, parentCreature2, parentCreature2.skills);
+  let newCreature1 = generateCreatureObject(id1, parentCreature1, parentCreature1.skills, owner);
+  let newCreature2 = generateCreatureObject(id2, parentCreature2, parentCreature2.skills, owner);
 
   return [newCreature1, newCreature2];
 }
 
-export function giveRandomCreaturesToOwner(): Array<Creature> {
-  let randomSampleCreature1 = creaturesVector[0];
-  let randomSampleCreature2 = creaturesVector[0];
+export function giveRandomCreaturesToOwner(owner: string): Array<Creature> {
+  let randomSampleCreature1 = creaturesVector[(randomNum() * 6) / 100];
+  let randomSampleCreature2 = creaturesVector[(randomNum() * 6) / 100];
 
   let id1 = generateRandomId();
   let id2 = generateRandomId();
 
-  let newCreature1 = generateCreatureObject(id1, randomSampleCreature1, randomSampleCreature1.skills);
-  let newCreature2 = generateCreatureObject(id2, randomSampleCreature2, randomSampleCreature2.skills);
+  let newCreature1 = generateCreatureObject(id1, randomSampleCreature1, randomSampleCreature1.skills, owner);
+  let newCreature2 = generateCreatureObject(id2, randomSampleCreature2, randomSampleCreature2.skills, owner);
 
   return [newCreature1, newCreature2];
 }
 
 export function getSampleCreaturesVector(): Array<SampleCreature> {
-  return creaturesVector;
+  const length = creaturesVector.length;
+  const result = new Array<SampleCreature>(length);
+  for (let i = 0; i < length; i++) {
+    result[i] = creaturesVector[i];
+  }
+  return result;
 }
 
 export function getSampleCreaturesMap(): PersistentMap<string, SampleCreature> {
@@ -121,8 +128,13 @@ export function getGenerationMap(): PersistentMap<string, string> {
   return generationMap;
 }
 
-export function getSkillsVector(): PersistentVector<string> {
-  return skillsVector;
+export function getSkillsVector(): Array<string> {
+  const length = skillsVector.length;
+  const result = new Array<string>(length);
+  for (let i = 0; i < length; i++) {
+    result[i] = skillsVector[i];
+  }
+  return result;
 }
 
 export function getOffspringMap(): PersistentMap<string, string> {
@@ -134,13 +146,13 @@ function getCreatureIdsByOwner(owner: string): Array<string> {
   if (!creatureIdList) {
     return new Array<string>();
   }
-  return creatureIdList.id;
+  return creatureIdList.arrayOfIds;
 }
 
-function setCreatureIdsByOwner(owner: string, id: string): void {
-  let creatureIdList = getCreatureIdsByOwner(owner);
-  creatureIdList.push(id);
-  let newList = new CreatureIdList(creatureIdList);
+export function setCreatureIdsByOwner(owner: string, id: string): void {
+  let creatureIdArray = getCreatureIdsByOwner(owner);
+  creatureIdArray.push(id);
+  let newList = new CreatureIdList(creatureIdArray);
   creaturesByOwner.set(owner, newList);
 }
 
@@ -159,7 +171,7 @@ export function getCreatureById(id: string): Creature {
   return creaturesById.getSome(id);
 }
 
-function setCreatureById(id: string, creature: Creature): void {
+export function setCreatureById(id: string, creature: Creature): void {
   creaturesById.set(id, creature);
 }
 
@@ -174,7 +186,7 @@ function generateRandomId(): string {
   return base64.encode(math.randomBuffer(ID_DIGITS));
 }
 
-function randomNum(): u32 {
+export function randomNum(): u32 {
   let buf = math.randomBuffer(4);
   return (
     (((0xff & buf[0]) << 24) |

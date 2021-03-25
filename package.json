@@ -1,7 +1,7 @@
 {
-  "name": "starter--assemblyscript",
+  "name": "near-mons",
   "version": "0.0.1",
-  "description": "Starter project for writing AssemblyScript contracts for NEAR Protocol",
+  "description": "Creatures",
   "scripts": {
     "dev": "watch -d -n 1 'clear && yarn test:unit'",
     "asp": "asp --verbose --nologo",

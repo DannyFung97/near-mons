@@ -2,7 +2,7 @@ import { context, logging, PersistentMap, PersistentVector } from "near-sdk-as";
 
 @nearBindgen
 export class CreatureIdList {
-  constructor(public id: Array<string>) { }
+  constructor(public arrayOfIds: Array<string>) { }
 }
 
 @nearBindgen
@@ -129,7 +129,7 @@ function initGenerationMap(): void {
 
 function initSkillsVector(): void {
   const skillsData = [
-    "h",
+    "ha",
     "fg",
     "wg",
     "gg",
@@ -137,23 +137,23 @@ function initSkillsVector(): void {
     "dg",
     "ng",
     "fs",
-    "fba",
-    "fbo",
+    "fb",
+    "fB",
     "ws",
-    "wba",
-    "wbo",
+    "wb",
+    "wB",
     "gs",
-    "gba",
-    "gbo",
+    "gb",
+    "gB",
     "ls",
-    "lba",
-    "lbo",
+    "lb",
+    "lB",
     "ds",
-    "dba",
-    "dbo",
+    "db",
+    "dB",
     "ns",
-    "nba",
-    "nbo",
+    "nb",
+    "nB",
     "au",
     "du",
     "su",
