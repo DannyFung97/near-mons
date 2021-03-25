@@ -1,4 +1,4 @@
-import { context, logging, base64, math, PersistentVector } from "near-sdk-as";
+import { context, logging, base64, math, PersistentVector, PersistentMap } from "near-sdk-as";
 
 import {
   Creature,
@@ -83,9 +83,22 @@ function generateCreatureObject(
   return childCreature;
 }
 
-export function giveCreaturesToOwner(): Array<Creature> {
-  let randomSampleCreature1 = creaturesVector[(randomNum() / 100) * 6];
-  let randomSampleCreature2 = creaturesVector[(randomNum() / 100) * 6];
+export function giveSpecificCreaturesToOwner(id_1: string, id_2: string): Array<Creature> {
+  let parentCreature1: SampleCreature = creaturesMap.getSome(id_1);
+  let parentCreature2: SampleCreature = creaturesMap.getSome(id_2);
+
+  let id1 = generateRandomId();
+  let id2 = generateRandomId();
+
+  let newCreature1 = generateCreatureObject(id1, parentCreature1, parentCreature1.skills);
+  let newCreature2 = generateCreatureObject(id2, parentCreature2, parentCreature2.skills);
+
+  return [newCreature1, newCreature2];
+}
+
+export function giveRandomCreaturesToOwner(): Array<Creature> {
+  let randomSampleCreature1 = creaturesVector[0];
+  let randomSampleCreature2 = creaturesVector[0];
 
   let id1 = generateRandomId();
   let id2 = generateRandomId();
@@ -96,8 +109,24 @@ export function giveCreaturesToOwner(): Array<Creature> {
   return [newCreature1, newCreature2];
 }
 
-export function getSampleCreatures(): PersistentVector<SampleCreature> {
+export function getSampleCreaturesVector(): Array<SampleCreature> {
   return creaturesVector;
+}
+
+export function getSampleCreaturesMap(): PersistentMap<string, SampleCreature> {
+  return creaturesMap;
+}
+
+export function getGenerationMap(): PersistentMap<string, string> {
+  return generationMap;
+}
+
+export function getSkillsVector(): PersistentVector<string> {
+  return skillsVector;
+}
+
+export function getOffspringMap(): PersistentMap<string, string> {
+  return offspringMap;
 }
 
 function getCreatureIdsByOwner(owner: string): Array<string> {

@@ -43,7 +43,7 @@ export const creaturesByOwner = new PersistentMap<string, CreatureIdList>("co");
 
 export const creaturesMap = new PersistentMap<string, SampleCreature>("cm");
 
-export const creaturesVector = new PersistentVector<SampleCreature>("cv");
+export const creaturesVector = new Array<SampleCreature>();
 
 export const generationMap = new PersistentMap<string, string>("gm");
 
@@ -63,7 +63,7 @@ function initCreatures(): void {
     "sal:10:10:10:fs,su:f:0",
     "tur:10:20:10:ws,du:w:0",
     "boa:20:20:10:gs,au:g:0",
-    "eag:20:10:20:h,ls:l:0",
+    "eag:20:10:20:ha,ls:l:0",
     "bat:20:10:20:ds,dd:d:0",
     "can:20:20:10:ns,ng:n:0",
     "ser:30:30:30:fg,ad:f:1",
@@ -78,7 +78,7 @@ function initCreatures(): void {
     "spi:30:30:40:lb,lg:l:2",
     "vam:30:40:40:db,ad:d:2",
     "kni:40:30:30:nB,du:n:2",
-    "pel:40:40:50,fB,sd:f:3",
+    "pel:40:40:50:fB,sd:f:3",
     "sob:50:40:50:wB,gg:w:3",
     "gai:40:50:40:gB,ng:g:3",
     "tho:50:30:50:lB,dg:l:3",
