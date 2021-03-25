@@ -5,8 +5,8 @@ import {
   procreateCreature,
   previewFutureChildCreature,
   giveSpecificCreaturesToOwner,
-  giveRandomCreaturesToOwner,
-  getSampleCreaturesVector,
+  // giveRandomCreaturesToOwner,
+  // getSampleCreaturesVector,
   getSampleCreaturesMap,
   getGenerationMap,
   getSkillsVector,
@@ -23,7 +23,7 @@ import {
   Creature,
   SampleCreature,
   creaturesMap,
-  creaturesVector,
+  // creaturesVector,
   generationMap,
   skillsVector,
   offspringMap,
@@ -36,6 +36,7 @@ import { storage, PersistentDeque, PersistentMap, PersistentVector, VMContext, V
 const owner = 'owner';
 
 const tempCreature: Creature = new Creature(
+  'f0',
   '1',
   'ken',
   '10',
@@ -47,6 +48,7 @@ const tempCreature: Creature = new Creature(
 );
 
 const tempSampleCreature: SampleCreature = new SampleCreature(
+  'f0',
   'ken',
   '10',
   '10',
@@ -59,18 +61,6 @@ const tempSampleCreature: SampleCreature = new SampleCreature(
 beforeEach(init);
 
 describe("Initialize contract", () => {
-
-  xit("Sample creatures are available in vector", () => {
-    const creature: SampleCreature = new SampleCreature(
-      "sal", "10", "10", "10", ["fs", "su"], "f", "0"
-    );
-    // log(creaturesVector);
-    expect(creaturesVector.length).toBeGreaterThan(0, "Should have creatures in vector.");
-    expect(creaturesVector[0]).toStrictEqual(
-      creature,
-      'creature should be "sal".'
-    );
-  });
 
   xit("Sample creatures are available in map", () => {
     // log(creaturesMap.getSome("f0"));
@@ -199,16 +189,17 @@ describe("Can preview and procreate creatures", () => {
     expect(futureCreature.def).toBe(creaturesMap.getSome('n1').def);
     expect(futureCreature.spd).toBe(creaturesMap.getSome('n1').spd);
     expect(futureCreature.skills).toHaveLength(creaturesMap.getSome('n1').skills.length);
-    expect(futureCreature.type).toBe(creaturesMap.getSome('n1').type);
-    expect(futureCreature.evo).toBe(creaturesMap.getSome('n1').evo);
+    expect(futureCreature.element).toBe(creaturesMap.getSome('n1').element);
+    expect(futureCreature.evolutionRank).toBe(creaturesMap.getSome('n1').evolutionRank);
 
+    expect(createdCreature.creatureId).toBe(creaturesMap.getSome('n1').creatureId);
     expect(createdCreature.name).toBe(creaturesMap.getSome('n1').name);
     expect(createdCreature.atk).toBe(creaturesMap.getSome('n1').atk);
     expect(createdCreature.def).toBe(creaturesMap.getSome('n1').def);
     expect(createdCreature.spd).toBe(creaturesMap.getSome('n1').spd);
     expect(createdCreature.skills).toHaveLength(skillsArray.length);
-    expect(createdCreature.element).toBe(creaturesMap.getSome('n1').type);
-    expect(createdCreature.evolutionRank).toBe(creaturesMap.getSome('n1').evo);
+    expect(createdCreature.element).toBe(creaturesMap.getSome('n1').element);
+    expect(createdCreature.evolutionRank).toBe(creaturesMap.getSome('n1').evolutionRank);
   });
 
   xit("Test previewFutureChildCreature", () => {
@@ -247,11 +238,6 @@ describe("Test getter functions", () => {
     log(creature);
   });
 
-  xit("Get sample creature objects vector", () => {
-    let creaturesVector = getSampleCreaturesVector();
-    log(creaturesVector);
-  });
-
   xit("Get sample creature objects map", () => {
     let creaturesMap = getSampleCreaturesMap();
     log(creaturesMap);
@@ -280,18 +266,16 @@ describe("Test getter functions", () => {
 
 describe("Give owner 2 creatures", () => {
 
-  xit("owner does not own any creatures", () => {
-    let creatures = getCreaturesByOwner(owner);
-    // log(creatures)
-    expect(creatures.length).toBe(0);
-    expect(creatures).toHaveLength(0);
+  it("owner does not own any creatures", () => {
+    let creatureIdList = getCreaturesByOwner(owner);
+    expect(creatureIdList).toHaveLength(0);
   });
 
-  xit("owner is given 2 creatures", () => {
-    const givenCreatures: Array<Creature> = giveRandomCreaturesToOwner(owner);
-    // log(givenCreatures);
-    // const creature1 = givenCreatures[0]
-    // const creature2 = givenCreatures[1]
-    expect(givenCreatures).toHaveLength(2);
+  it("owner is given 2 creatures", () => {
+    let creatureIdList = getCreaturesByOwner(owner);
+    expect(creatureIdList).toHaveLength(0);
+    const givenCreatures: Array<Creature> = giveSpecificCreaturesToOwner('d0', 'l0', owner);
+    creatureIdList = getCreaturesByOwner(owner);
+    expect(creatureIdList).toHaveLength(2);
   });
 });
