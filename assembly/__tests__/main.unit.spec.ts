@@ -79,17 +79,14 @@ beforeEach(init);
 describe("Initialize contract", () => {
 
   it("Sample creatures are available in map", () => {
-    // log(sampleCreaturesMap.getSome("f0"));
     expect(sampleCreaturesMap.contains("f0")).toBe(true);
   });
 
   it("Generation map is available", () => {
-    // log(generationMap.getSome("dw"));
     expect(generationMap.contains('dw')).toBe(true);
   });
 
   it("Offspring map is available", () => {
-    // log(offspringMap.getSome('00'));
     expect(offspringMap.contains('00')).toBe(true);
   });
 });
@@ -132,7 +129,6 @@ describe("Can create creature", () => {
 
     // calls generateCreature, setCreatureById, getCreatureIdsByOwner, setCreatureIdsByOwner
     let creatureObj = procreateCreature(sampleCreature.skills, sampleCreature);
-    log(creatureObj.owner)
 
     expect(creatureObj).not.toBeNull();
 
@@ -142,9 +138,9 @@ describe("Can create creature", () => {
 
     // final: test getter of creaturesByOwner
     creatureIdList = creaturesByOwner.get(owner);
-    log(owner)
     expect(creatureIdList).not.toBeNull();
 
+    expect(creatureObj.owner).toBe(owner);
     if (creatureIdList) {
       expect(creatureIdList.arrayOfIds[0]).toBe(creatureObj.instanceId);
     }

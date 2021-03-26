@@ -26,13 +26,13 @@ echo --------------------------------------------
 echo
 echo "redeploying the contract"
 echo
-near dev-deploy ./build/release/near-mons.wasm
+near dev-deploy ./out/main.wasm
 
 echo --------------------------------------------
 echo run the following commands
 echo
 echo 'export CONTRACT=__new_contract_account_id__'
-echo
+echo near call $CONTRACT init '{}' --account_id $OWNER
 echo
 
 exit 0
