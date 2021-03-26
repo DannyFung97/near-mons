@@ -32,7 +32,7 @@ echo --------------------------------------------
 echo run the following commands
 echo
 echo 'export CONTRACT=__new_contract_account_id__'
-echo near call $CONTRACT init '{}' --account_id $OWNER
+echo near call CONTRACT init '{}' --account_id OWNER
 echo
 
 exit 0

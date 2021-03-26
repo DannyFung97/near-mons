@@ -30,7 +30,8 @@ export function getCreaturesByOwner(owner: string): Creature[] {
   return creaturesList;
 }
 
-export function procreateCreature(newSkills: Array<String>, newCreature: SampleCreature): Creature {
+export function procreateCreature(newSkills: Array<String>, newCreatureSampleId: string): Creature {
+  const newCreature = sampleCreaturesMap.getSome(newCreatureSampleId)
   let child_id = generateRandomId();
 
   return generateCreatureObject(
@@ -40,9 +41,9 @@ export function procreateCreature(newSkills: Array<String>, newCreature: SampleC
   );
 }
 
-export function previewFutureChildCreature(creatureIdA: string, creatureIdB: string): SampleCreature {
-  let parentA = getCreatureByInstanceId(creatureIdA);
-  let parentB = getCreatureByInstanceId(creatureIdB);
+export function previewFutureChildCreature(creatureInstanceIdA: string, creatureInstanceIdB: string): SampleCreature {
+  let parentA = getCreatureByInstanceId(creatureInstanceIdA);
+  let parentB = getCreatureByInstanceId(creatureInstanceIdB);
 
   let child_evolutionRank = parentA.evolutionRank < parentB.evolutionRank ?
     offspringMap.getSome(parentA.evolutionRank.concat(parentB.evolutionRank)) :

@@ -128,7 +128,7 @@ describe("Can create creature", () => {
     let sampleCreature: SampleCreature = sampleCreaturesMap.getSome("f0");
 
     // calls generateCreature, setCreatureById, getCreatureIdsByOwner, setCreatureIdsByOwner
-    let creatureObj = procreateCreature(sampleCreature.skills, sampleCreature);
+    let creatureObj = procreateCreature(sampleCreature.skills, sampleCreature.sampleId);
 
     expect(creatureObj).not.toBeNull();
 
@@ -168,8 +168,8 @@ beforeEach(init);
 describe("Can preview and procreate creatures", () => {
 
   it("Test Preview", () => {
-    let parentA = procreateCreature(tempSampleCreature1.skills, tempSampleCreature1);
-    let parentB = procreateCreature(tempSampleCreature2.skills, tempSampleCreature2);
+    let parentA = procreateCreature(tempSampleCreature1.skills, tempSampleCreature1.sampleId);
+    let parentB = procreateCreature(tempSampleCreature2.skills, tempSampleCreature2.sampleId);
 
     let child_evolutionRank = parentA.evolutionRank < parentB.evolutionRank ?
     offspringMap.getSome(parentA.evolutionRank.concat(parentB.evolutionRank)) :
@@ -188,7 +188,7 @@ describe("Can preview and procreate creatures", () => {
   });
 
   it("Test Procreate", () => {
-    const createdCreature: Creature = procreateCreature(tempSampleCreature1.skills, tempSampleCreature1);
+    const createdCreature: Creature = procreateCreature(tempSampleCreature1.skills, tempSampleCreature1.sampleId);
 
     expect(createdCreature.name).toBe(tempSampleCreature1.name);
     expect(createdCreature.atk).toBe(tempSampleCreature1.atk);
@@ -200,13 +200,13 @@ describe("Can preview and procreate creatures", () => {
 
   it("Test Preview and procreate", () => {
 
-    let parentA = procreateCreature(tempSampleCreature1.skills, tempSampleCreature1);
-    let parentB = procreateCreature(tempSampleCreature2.skills, tempSampleCreature2);
+    let parentA = procreateCreature(tempSampleCreature1.skills, tempSampleCreature1.sampleId);
+    let parentB = procreateCreature(tempSampleCreature2.skills, tempSampleCreature2.sampleId);
 
     const futureCreature: SampleCreature = previewFutureChildCreature(parentA.instanceId, parentB.instanceId);
     
     const skillsArray = [parentA.skills[0], parentB.skills[0], parentB.skills[1], futureCreature.skills[0]]
-    const createdCreature: Creature = procreateCreature(skillsArray, futureCreature);
+    const createdCreature: Creature = procreateCreature(skillsArray, futureCreature.sampleId);
 
     expect(futureCreature.name).toBe(sampleCreaturesMap.getSome('d1').name);
     expect(futureCreature.atk).toBe(sampleCreaturesMap.getSome('d1').atk);
@@ -239,8 +239,8 @@ describe("Test getter functions", () => {
   });
 
   it("Get child creature preview", () => {
-    let parentA = procreateCreature(tempSampleCreature1.skills, tempSampleCreature1);
-    let parentB = procreateCreature(tempSampleCreature2.skills, tempSampleCreature2);
+    let parentA = procreateCreature(tempSampleCreature1.skills, tempSampleCreature1.sampleId);
+    let parentB = procreateCreature(tempSampleCreature2.skills, tempSampleCreature2.sampleId);
     let creature = previewFutureChildCreature(parentA.instanceId, parentB.instanceId);
 
     expect(creature.sampleId).toBe('d1');
@@ -264,7 +264,7 @@ describe("Test getter functions", () => {
 
   it("Get creature by instance id", () => {
     let sampleCreature: SampleCreature = sampleCreaturesMap.getSome("f0");
-    let creatureObj = procreateCreature(sampleCreature.skills, sampleCreature);
+    let creatureObj = procreateCreature(sampleCreature.skills, sampleCreature.sampleId);
     let creature = getCreatureByInstanceId(creatureObj.instanceId);
 
     expect(creature.name).toBe(creatureObj.name);
