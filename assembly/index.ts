@@ -30,14 +30,13 @@ export function getCreaturesByOwner(owner: string): Creature[] {
   return creaturesList;
 }
 
-export function procreateCreature(newSkills: Array<String>, newCreature: SampleCreature, owner: string): Creature {
+export function procreateCreature(newSkills: Array<String>, newCreature: SampleCreature): Creature {
   let child_id = generateRandomId();
 
   return generateCreatureObject(
     child_id,
     newCreature,
-    newSkills,
-    owner
+    newSkills
   );
 }
 
@@ -60,11 +59,10 @@ export function previewFutureChildCreature(creatureIdA: string, creatureIdB: str
   return newCreature;
 }
 
-export function generateCreatureObject(
+function generateCreatureObject(
   instanceId: string,
   newCreature: SampleCreature,
-  newSkills: Array<String>,
-  owner: string
+  newSkills: Array<String>
 ): Creature {
   let creature = new Creature(
     newCreature.sampleId,
@@ -79,20 +77,20 @@ export function generateCreatureObject(
   );
 
   setCreatureByInstanceId(instanceId, creature);
-  setCreatureIdsByOwner(owner, instanceId);
+  setCreatureIdsByOwner(context.sender, instanceId);
 
   return creature;
 }
 
-export function giveCreaturesToOwner(creatureId1: string, creatureId2: string, owner:string): Array<Creature> {
+export function giveCreaturesToOwner(creatureId1: string, creatureId2: string): Array<Creature> {
   let parentCreature1: SampleCreature = sampleCreaturesMap.getSome(creatureId1);
   let parentCreature2: SampleCreature = sampleCreaturesMap.getSome(creatureId2);
 
   let id1 = generateRandomId();
   let id2 = generateRandomId();
 
-  let newCreature1 = generateCreatureObject(id1, parentCreature1, parentCreature1.skills, owner);
-  let newCreature2 = generateCreatureObject(id2, parentCreature2, parentCreature2.skills, owner);
+  let newCreature1 = generateCreatureObject(id1, parentCreature1, parentCreature1.skills);
+  let newCreature2 = generateCreatureObject(id2, parentCreature2, parentCreature2.skills);
 
   return [newCreature1, newCreature2];
 }
