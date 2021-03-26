@@ -1,5 +1,11 @@
 # near-mons
 
+This is an application that utilizes a smart contract that mints NFTs as ingame collectibles. 
+
+Users can create new creatures by having two parent creatures fuse to form a child creature, which will inherit its parents' skills and attributes. This feature can lead to almost endless number of unique creature instances, with builds that would define the meta or are just for the memes.
+
+This smart contract serves to keep the integrity of the owner's creatures and be applied to future applications, maybe like an online trading card game or role-playing game.
+
 ## Usage
 
 ### Getting started
@@ -7,42 +13,21 @@
 1. clone this repo to a local folder
 2. run `yarn`
 3. run `yarn test`
-
-### Top-level `yarn` commands
-
-- run `yarn test` to run all tests
-  - (!) be sure to run `yarn build:release` at least once before:
-    - run `yarn test:unit` to run only unit tests
-    - run `yarn test:simulate` to run only simulation tests
-- run `yarn build` to quickly verify build status
-- run `yarn clean` to clean up build folder
-
-### Other documentation
-
-- Sample contract and test documentation
-  - see `/src/sample/README` for contract interface
-  - see `/src/sample/__tests__/README` for Sample unit testing details
-
-- Sample contract simulation tests
-  - see `/simulation/README` for simulation testing
-
+4. run `near login` (yarn install near-cli)
+5. run `./scripts/1.init.sh `
+5. run `./scripts/2.run.sh `
 
 ## The file system
-
-Please note that boilerplate project configuration files have been ommitted from the following lists for simplicity.
 
 ### Contracts and Unit Tests
 
 ```txt
-src
-├── sample                        <-- sample contract
+assembly                        <-- contract
+├── __tests__
 │   ├── README.md
-│   ├── __tests__
-│   │   ├── README.md
-│   │   └── index.unit.spec.ts
-│   └── assembly
-│       └── index.ts
-└── utils.ts                      <-- shared contract code
+│   └── index.unit.spec.ts
+└── index.ts
+|__ model.ts
 ```
 
 ### Helper Scripts
@@ -53,8 +38,6 @@ scripts
 ├── 2.run.sh
 └── README.md                     <-- instructions
 ```
-
-This is an application that utilizes a smart contract that mints NFTs as ingame collectibles. Users can create new creatures by having two parent creatures procreate to form a child creature, which will inherit its parents' skills and attributes.
 
 Smart Contract API
 =====================
