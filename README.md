@@ -65,30 +65,32 @@ model.ts
    List of creature ids.
 
       export class CreatureIdList {
-         constructor(public id: Array<string>) {}
+         constructor(public arrayOfIds: Array<string>) { }
       }
 
    Creature class that contains the creature's owner and metadata.
 
       export class Creature {
-         owner: string;
-         constructor (
-            public id: string,
-            public name: string,
-            public atk: string,
-            public def: string,
-            public spd: string,
-            public skills: Array<String>,
-            public element: string,
-            public evolutionRank: string,
-         ) {
-            this.owner = context.sender;
-         }
+        owner: string;
+        constructor(
+          public sampleId: string,
+          public instanceId: string,
+          public name: string,
+          public atk: string,
+          public def: string,
+          public spd: string,
+          public skills: Array<string>,
+          public element: string,
+          public evolutionRank: string,
+        ) {
+          this.owner = context.sender;
+        }
       }
 
    Creature class used to preview creatures in their original states.
 
       export class SampleCreature {
+         public sampleId: string,
          public name: string;
          public atk: string;
          public def: string;
@@ -100,87 +102,66 @@ model.ts
 
    A persistent map that links creature id to creature object.
 
-      export const creaturesById = new PersistentMap<string, Creature>('creaturesById');
+      export const creaturesByInstanceId = new PersistentMap<string, Creature>('ci');
 
    A persistent map that links owner name to array of creature ids they own.
          
-      export const creaturesByOwner = new PersistentMap<string, CreatureIdList>("creaturesByOwner")
+      export const creaturesByOwner = new PersistentMap<string, CreatureIdList>("co")
 
-   An array of all existing creatures as well as their metadata.
+   A map of all sample creatures with their sample id as key.
 
-      export const creaturesArray: Array<SampleCreature> = [
-         {
-            name: "Salamander",
-            atk: '10',
-            def: '10',
-            spd: '20',
-            skills: ["firespark", "speedup"], 
-            type: "fire", 
-            evo: '0',
-      }, {...}, {...}, ... ]
-
-   A map of all existing skills with their names and descriptions.
-
-      export const skillsMap: any = {
-         'fireguard': { description: 'Resistance against fire damage.'},
-         ... }
+      export const sampleCreaturesMap = new PersistentMap<string, SampleCreature>("cm")
 
    A map of all type combinations during procreation. Concatenate the two parents' types in alphabetical order into a string, then use this map to find the value of the child's type. If the parents share the same type, then the child will be of that type too.
 
-      export const generationMap: any = {'darkwater': 'fire', ... }
+      export const generationMap = new PersistentMap<string, string>("gm")
 
    A map of all evolution combinations during procreation. Concatenate the two parents' evolution ranks in numerical order into a string, then use this map to find the value of the child's evolution rank.
 
-      export const offspringMap: any {
-         '00': '1',
-         '01': '1',
-         '02': '1',
-         '03': '1',
-         '11': '2',
-         '12': '2',
-         '13': '2',
-         '22': '3',
-         '23': '3',
-         '33': '0',
-      }
-
-   A map for reference to elemental weaknesses. For example, fire is weak to water, water is weak to grass, etc.
-
-      export const elementMap: any {
-         'fire': 'water',
-         'water': 'grass',
-         'grass': 'fire',
-         'light': 'dark',
-         'dark': 'light',
-         'normal': 'normal'
-      }
+      export const offspringMap = new PersistentMap<string, string>("om")
    
 index.ts
 ----------
+
+   Initializes contract, as well as procreation and creature data.
+
+      export function init(): void
 
    Return array list of creature objects owned by a user.
 
       export function getCreaturesByOwner(owner: string): Creature[]
 
-   Function to let the user foresee what child creature they will get from procreation, along with their skills and attributes. From the user interface, after being viewed what child creature will result from both parents, the user can select which of the parents' skills the child will learn, and which of the child's skills it will forget.
+   Function to let the user foresee what child creature they will get from the parent's procreation, along with their skills and attributes. From the user interface, after being viewed what child creature will result from both parents, the user can select which of the parents' skills the child will learn, and which of the child's skills it will forget.
 
-      export function previewFutureChildCreature(a_id: string, b_id: string): SampleCreature
+      export function previewFutureChildCreature(creatureInstanceIdA: string, creatureInstanceIdB: string): SampleCreature
       
-   Procreate a new creature using the user's chosen skills, and the SampleCreature of the future child creature.
+   Procreate a new creature using the parent's instance ids, user's chosen skills, and the SampleCreature of the future child creature.
 
-      export function procreateCreature(newSkills: Array<String>, newCreature: SampleCreature): Creature
+      export function procreateCreature(parentInstanceIdA: string, parentInstanceIdB: string, newSkills: Array<string>, newCreatureSampleId: string): Creature
    
    Generate a new creature, this is primarily a helper function to procreateCreature(). In here, a new creature object is created, assigned a random ID, and set to an owner.
 
       function generateCreatureObject(
-         id: string,
-         newCreature: SampleCreature,
-         newSkills: Array<String>,
+        instanceId: string,
+        newCreature: SampleCreature,
+        newSkills: Array<string>
       ): Creature
 
    Function to give two creatures to the owner, should only be called if the owner does not have creatures.
 
-      export function giveCreaturesToOwner(): Array<Creature>
+      export function giveCreaturesToOwner(creatureSampleId1: string, creatureSampleId2: string): Array<Creature>
+
+   Get sample creature using sample Id.
+
+      export function getSampleCreature(creatureSampleId: string): SampleCreature
+
+   Get generation from generation map.
+
+      export function getGeneration(combo: string): string
+
+   Get offspring output from offspring map.
+
+      export function getOffspring(combo: string): string
 
    Get the creature ids from the owner.
 
@@ -205,14 +186,6 @@ index.ts
    Delete creature object by id.
 
       export function deleteCreatureById(id: string): void
-
-   Get skill data.
-
-      export function getSkillData(skill_name: string): string
-
-   Get weakness to an element.
-
-      export function getElementWeakness(type: string): string
 
    Random ID Generator.
 

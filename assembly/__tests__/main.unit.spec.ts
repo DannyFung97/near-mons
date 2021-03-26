@@ -91,6 +91,23 @@ describe("Initialize contract", () => {
   });
 });
 
+
+describe("Give owner 2 creatures", () => {
+
+  it("owner does not own any creatures", () => {
+    let creatureIdList = getCreaturesByOwner(owner);
+    expect(creatureIdList).toHaveLength(0);
+  });
+
+  it("owner is given 2 creatures", () => {
+    let creatureIdList = getCreaturesByOwner(owner);
+    expect(creatureIdList).toHaveLength(0);
+    const givenCreatures: Array<Creature> = giveCreaturesToOwner('d0', 'l0');
+    creatureIdList = getCreaturesByOwner(owner);
+    expect(creatureIdList).toHaveLength(2);
+  });
+});
+
 describe("Test hardcoded getters", () => {
 
   // simulates generateCreature
@@ -125,10 +142,11 @@ describe("Can create creature", () => {
     let creatureIdList = creaturesByOwner.get(owner);
     expect(creatureIdList).toBeNull();
 
-    let sampleCreature: SampleCreature = sampleCreaturesMap.getSome("f0");
+    const givenCreatures: Array<Creature> = giveCreaturesToOwner('d0', 'l0');
+    const futureCreature: SampleCreature = previewFutureChildCreature(givenCreatures[0].instanceId, givenCreatures[1].instanceId);
 
     // calls generateCreature, setCreatureById, getCreatureIdsByOwner, setCreatureIdsByOwner
-    let creatureObj = procreateCreature(sampleCreature.skills, sampleCreature.sampleId);
+    let creatureObj = procreateCreature(givenCreatures[0].instanceId, givenCreatures[1].instanceId, futureCreature.skills, futureCreature.sampleId);
 
     expect(creatureObj).not.toBeNull();
 
@@ -142,7 +160,8 @@ describe("Can create creature", () => {
 
     expect(creatureObj.owner).toBe(owner);
     if (creatureIdList) {
-      expect(creatureIdList.arrayOfIds[0]).toBe(creatureObj.instanceId);
+      expect(creatureIdList.arrayOfIds[2]).toBe(creatureObj.instanceId);
+      expect(futureCreature.sampleId).toBe(creatureObj.sampleId);
     }
   });
 
@@ -168,45 +187,45 @@ beforeEach(init);
 describe("Can preview and procreate creatures", () => {
 
   it("Test Preview", () => {
-    let parentA = procreateCreature(tempSampleCreature1.skills, tempSampleCreature1.sampleId);
-    let parentB = procreateCreature(tempSampleCreature2.skills, tempSampleCreature2.sampleId);
+    const givenCreatures: Array<Creature> = giveCreaturesToOwner('d0', 'l0');
 
-    let child_evolutionRank = parentA.evolutionRank < parentB.evolutionRank ?
-    offspringMap.getSome(parentA.evolutionRank.concat(parentB.evolutionRank)) :
-    offspringMap.getSome(parentB.evolutionRank.concat(parentA.evolutionRank));
+    let child_evolutionRank = givenCreatures[0].evolutionRank < givenCreatures[1].evolutionRank ?
+    offspringMap.getSome(givenCreatures[0].evolutionRank.concat(givenCreatures[1].evolutionRank)) :
+    offspringMap.getSome(givenCreatures[1].evolutionRank.concat(givenCreatures[0].evolutionRank));
 
-    let child_element = parentA.element < parentB.element ?
-    generationMap.getSome(parentA.element.concat(parentB.element)) :
-    parentA.element > parentB.element ?
-    generationMap.getSome(parentB.element.concat(parentA.element)) :
-    parentA.element.toString();
+    let child_element = givenCreatures[0].element < givenCreatures[1].element ?
+    generationMap.getSome(givenCreatures[0].element.concat(givenCreatures[1].element)) :
+    givenCreatures[0].element > givenCreatures[1].element ?
+    generationMap.getSome(givenCreatures[1].element.concat(givenCreatures[0].element)) :
+    givenCreatures[0].element.toString();
 
     let newCreature = sampleCreaturesMap.getSome(child_element.concat(child_evolutionRank));
 
-    expect(newCreature.sampleId).toBe('d1');
-    expect(newCreature.name).toBe('imp');
+    expect(newCreature.sampleId).toBe('n1');
+    expect(newCreature.name).toBe('swo');
   });
 
   it("Test Procreate", () => {
-    const createdCreature: Creature = procreateCreature(tempSampleCreature1.skills, tempSampleCreature1.sampleId);
+    const givenCreatures: Array<Creature> = giveCreaturesToOwner('d0', 'l0');
 
-    expect(createdCreature.name).toBe(tempSampleCreature1.name);
-    expect(createdCreature.atk).toBe(tempSampleCreature1.atk);
-    expect(createdCreature.def).toBe(tempSampleCreature1.def);
-    expect(createdCreature.spd).toBe(tempSampleCreature1.spd);
-    expect(createdCreature.element).toBe(tempSampleCreature1.element);
-    expect(createdCreature.evolutionRank).toBe(tempSampleCreature1.evolutionRank);
+    const futureCreature: SampleCreature = previewFutureChildCreature(givenCreatures[0].instanceId, givenCreatures[1].instanceId);
+    const createdCreature: Creature = procreateCreature(givenCreatures[0].instanceId, givenCreatures[1].instanceId, futureCreature.skills, futureCreature.sampleId);
+
+    expect(createdCreature.name).toBe(futureCreature.name);
+    expect(createdCreature.atk).toBe(futureCreature.atk);
+    expect(createdCreature.def).toBe(futureCreature.def);
+    expect(createdCreature.spd).toBe(futureCreature.spd);
+    expect(createdCreature.element).toBe(futureCreature.element);
+    expect(createdCreature.evolutionRank).toBe(futureCreature.evolutionRank);
   })
 
   it("Test Preview and procreate", () => {
 
-    let parentA = procreateCreature(tempSampleCreature1.skills, tempSampleCreature1.sampleId);
-    let parentB = procreateCreature(tempSampleCreature2.skills, tempSampleCreature2.sampleId);
+    const givenCreatures: Array<Creature> = giveCreaturesToOwner('f0', 'w0');
+    const futureCreature: SampleCreature = previewFutureChildCreature(givenCreatures[0].instanceId, givenCreatures[1].instanceId);
 
-    const futureCreature: SampleCreature = previewFutureChildCreature(parentA.instanceId, parentB.instanceId);
-    
-    const skillsArray = [parentA.skills[0], parentB.skills[0], parentB.skills[1], futureCreature.skills[0]]
-    const createdCreature: Creature = procreateCreature(skillsArray, futureCreature.sampleId);
+    const skillsArray = [givenCreatures[0].skills[0], givenCreatures[1].skills[0], givenCreatures[1].skills[1], futureCreature.skills[0]]
+    const createdCreature: Creature = procreateCreature(givenCreatures[0].instanceId, givenCreatures[1].instanceId, skillsArray, futureCreature.sampleId);
 
     expect(futureCreature.name).toBe(sampleCreaturesMap.getSome('d1').name);
     expect(futureCreature.atk).toBe(sampleCreaturesMap.getSome('d1').atk);
@@ -239,9 +258,9 @@ describe("Test getter functions", () => {
   });
 
   it("Get child creature preview", () => {
-    let parentA = procreateCreature(tempSampleCreature1.skills, tempSampleCreature1.sampleId);
-    let parentB = procreateCreature(tempSampleCreature2.skills, tempSampleCreature2.sampleId);
-    let creature = previewFutureChildCreature(parentA.instanceId, parentB.instanceId);
+    const givenCreatures: Array<Creature> = giveCreaturesToOwner('f0', 'w0');
+
+    let creature = previewFutureChildCreature(givenCreatures[0].instanceId, givenCreatures[1].instanceId);
 
     expect(creature.sampleId).toBe('d1');
     expect(creature.name).toBe('imp');
@@ -263,27 +282,12 @@ describe("Test getter functions", () => {
   });
 
   it("Get creature by instance id", () => {
-    let sampleCreature: SampleCreature = sampleCreaturesMap.getSome("f0");
-    let creatureObj = procreateCreature(sampleCreature.skills, sampleCreature.sampleId);
+    const givenCreatures: Array<Creature> = giveCreaturesToOwner('f0', 'w0');
+    const futureCreature: SampleCreature = previewFutureChildCreature(givenCreatures[0].instanceId, givenCreatures[1].instanceId);
+    let creatureObj = procreateCreature(givenCreatures[0].instanceId, givenCreatures[1].instanceId, futureCreature.skills, futureCreature.sampleId);
     let creature = getCreatureByInstanceId(creatureObj.instanceId);
 
     expect(creature.name).toBe(creatureObj.name);
-  });
-});
-
-describe("Give owner 2 creatures", () => {
-
-  it("owner does not own any creatures", () => {
-    let creatureIdList = getCreaturesByOwner(owner);
-    expect(creatureIdList).toHaveLength(0);
-  });
-
-  it("owner is given 2 creatures", () => {
-    let creatureIdList = getCreaturesByOwner(owner);
-    expect(creatureIdList).toHaveLength(0);
-    const givenCreatures: Array<Creature> = giveCreaturesToOwner('d0', 'l0');
-    creatureIdList = getCreaturesByOwner(owner);
-    expect(creatureIdList).toHaveLength(2);
   });
 });
 

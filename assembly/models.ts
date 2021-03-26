@@ -15,7 +15,7 @@ export class Creature {
     public atk: string,
     public def: string,
     public spd: string,
-    public skills: Array<String>,
+    public skills: Array<string>,
     public element: string,
     public evolutionRank: string,
   ) {
@@ -31,7 +31,7 @@ export class SampleCreature {
     public atk: string,
     public def: string,
     public spd: string,
-    public skills: Array<String>,
+    public skills: Array<string>,
     public element: string,
     public evolutionRank: string
   ) {
