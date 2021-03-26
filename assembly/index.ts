@@ -4,11 +4,9 @@ import {
   CreatureIdList,
   Creature,
   SampleCreature,
-  creaturesById,
+  creaturesByInstanceId,
   creaturesByOwner,
-  creaturesMap,
-  // creaturesVector,
-  skillsVector,
+  sampleCreaturesMap,
   generationMap,
   offspringMap,
   initContract
@@ -24,8 +22,8 @@ export function getCreaturesByOwner(owner: string): Creature[] {
   let creaturesList = new Array<Creature>();
   for (let i = 0; i < creatureIdList.length; i++) {
     let creatureId = creatureIdList[i];
-    if (creaturesById.contains(creatureId)) {
-      let creature = creaturesById.getSome(creatureId);
+    if (creaturesByInstanceId.contains(creatureId)) {
+      let creature = creaturesByInstanceId.getSome(creatureId);
       creaturesList.push(creature);
     }
   }
@@ -44,8 +42,8 @@ export function procreateCreature(newSkills: Array<String>, newCreature: SampleC
 }
 
 export function previewFutureChildCreature(creatureIdA: string, creatureIdB: string): SampleCreature {
-  let parentA = getCreatureById(creatureIdA);
-  let parentB = getCreatureById(creatureIdB);
+  let parentA = getCreatureByInstanceId(creatureIdA);
+  let parentB = getCreatureByInstanceId(creatureIdB);
 
   let child_evolutionRank = parentA.evolutionRank < parentB.evolutionRank ?
     offspringMap.getSome(parentA.evolutionRank.concat(parentB.evolutionRank)) :
@@ -57,20 +55,20 @@ export function previewFutureChildCreature(creatureIdA: string, creatureIdB: str
     generationMap.getSome(parentB.element.concat(parentA.element)) :
     parentA.element.toString();
 
-  let newCreature = creaturesMap.getSome(child_element.concat(child_evolutionRank));
+  let newCreature = sampleCreaturesMap.getSome(child_element.concat(child_evolutionRank));
 
   return newCreature;
 }
 
 export function generateCreatureObject(
-  id: string,
+  instanceId: string,
   newCreature: SampleCreature,
   newSkills: Array<String>,
   owner: string
 ): Creature {
   let creature = new Creature(
-    newCreature.creatureId,
-    id,
+    newCreature.sampleId,
+    instanceId,
     newCreature.name,
     newCreature.atk,
     newCreature.def,
@@ -80,15 +78,15 @@ export function generateCreatureObject(
     newCreature.evolutionRank
   );
 
-  setCreatureById(id, creature);
-  setCreatureIdsByOwner(owner, id);
+  setCreatureByInstanceId(instanceId, creature);
+  setCreatureIdsByOwner(owner, instanceId);
 
   return creature;
 }
 
-export function giveSpecificCreaturesToOwner(creatureId1: string, creatureId2: string, owner:string): Array<Creature> {
-  let parentCreature1: SampleCreature = creaturesMap.getSome(creatureId1);
-  let parentCreature2: SampleCreature = creaturesMap.getSome(creatureId2);
+export function giveCreaturesToOwner(creatureId1: string, creatureId2: string, owner:string): Array<Creature> {
+  let parentCreature1: SampleCreature = sampleCreaturesMap.getSome(creatureId1);
+  let parentCreature2: SampleCreature = sampleCreaturesMap.getSome(creatureId2);
 
   let id1 = generateRandomId();
   let id2 = generateRandomId();
@@ -99,47 +97,16 @@ export function giveSpecificCreaturesToOwner(creatureId1: string, creatureId2: s
   return [newCreature1, newCreature2];
 }
 
-// export function giveRandomCreaturesToOwner(owner: string): Array<Creature> {
-//   let randomSampleCreature1 = creaturesVector[(randomNum() * 6) / 100];
-//   let randomSampleCreature2 = creaturesVector[(randomNum() * 6) / 100];
-
-//   let id1 = generateRandomId();
-//   let id2 = generateRandomId();
-
-//   let newCreature1 = generateCreatureObject(id1, randomSampleCreature1, randomSampleCreature1.skills, owner);
-//   let newCreature2 = generateCreatureObject(id2, randomSampleCreature2, randomSampleCreature2.skills, owner);
-
-//   return [newCreature1, newCreature2];
-// }
-
-// export function getSampleCreaturesVector(): Array<SampleCreature> {
-//   const length = creaturesVector.length;
-//   const result = new Array<SampleCreature>(length);
-//   for (let i = 0; i < length; i++) {
-//     result[i] = creaturesVector[i];
-//   }
-//   return result;
-// }
-
-export function getSampleCreaturesMap(): PersistentMap<string, SampleCreature> {
-  return creaturesMap;
+export function getSampleCreature(creatureId: string): SampleCreature {
+  return sampleCreaturesMap.getSome(creatureId);
 }
 
-export function getGenerationMap(): PersistentMap<string, string> {
-  return generationMap;
+export function getGeneration(combo: string): string {
+  return generationMap.getSome(combo);
 }
 
-export function getSkillsVector(): Array<string> {
-  const length = skillsVector.length;
-  const result = new Array<string>(length);
-  for (let i = 0; i < length; i++) {
-    result[i] = skillsVector[i];
-  }
-  return result;
-}
-
-export function getOffspringMap(): PersistentMap<string, string> {
-  return offspringMap;
+export function getOffspring(combo: string): string {
+  return offspringMap.getSome(combo);
 }
 
 function getCreatureIdsByOwner(owner: string): Array<string> {
@@ -168,18 +135,18 @@ function deleteCreatureIdsByOwner(owner: string, id: string): void {
   creaturesByOwner.set(owner, newList);
 }
 
-export function getCreatureById(id: string): Creature {
-  return creaturesById.getSome(id);
+export function getCreatureByInstanceId(instanceId: string): Creature {
+  return creaturesByInstanceId.getSome(instanceId);
 }
 
-export function setCreatureById(id: string, creature: Creature): void {
-  creaturesById.set(id, creature);
+export function setCreatureByInstanceId(instanceId: string, creature: Creature): void {
+  creaturesByInstanceId.set(instanceId, creature);
 }
 
-export function deleteCreatureById(id: string): void {
-  let creature = getCreatureById(id);
-  deleteCreatureIdsByOwner(creature.owner, id);
-  creaturesById.delete(id);
+export function deleteCreatureByInstanceId(instanceId: string): void {
+  let creature = getCreatureByInstanceId(instanceId);
+  deleteCreatureIdsByOwner(creature.owner, instanceId);
+  creaturesByInstanceId.delete(instanceId);
 }
 
 function generateRandomId(): string {
@@ -197,3 +164,12 @@ export function randomNum(): u32 {
     100
   );
 }
+
+// export function getSkillsVector(): Array<string> {
+//   const length = skillsVector.length;
+//   const result = new Array<string>(length);
+//   for (let i = 0; i < length; i++) {
+//     result[i] = skillsVector[i];
+//   }
+//   return result;
+// }

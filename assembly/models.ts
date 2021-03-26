@@ -9,8 +9,8 @@ export class CreatureIdList {
 export class Creature {
   owner: string;
   constructor(
-    public creatureId: string,
-    public id: string,
+    public sampleId: string,
+    public instanceId: string,
     public name: string,
     public atk: string,
     public def: string,
@@ -26,7 +26,7 @@ export class Creature {
 @nearBindgen
 export class SampleCreature {
   constructor(
-    public creatureId: string,
+    public sampleId: string,
     public name: string,
     public atk: string,
     public def: string,
@@ -39,25 +39,25 @@ export class SampleCreature {
   }
 }
 
-export const creaturesById = new PersistentMap<string, Creature>('ci');
+export const creaturesByInstanceId = new PersistentMap<string, Creature>('ci');
 
 export const creaturesByOwner = new PersistentMap<string, CreatureIdList>("co");
 
-export const creaturesMap = new PersistentMap<string, SampleCreature>("cm");
-
-// export const creaturesVector = new Array<SampleCreature>();
+export const sampleCreaturesMap = new PersistentMap<string, SampleCreature>("cm");
 
 export const generationMap = new PersistentMap<string, string>("gm");
 
-export const skillsVector = new PersistentVector<string>("sm");
-
 export const offspringMap = new PersistentMap<string, string>("om");
+
+// export const skillsVector = new PersistentVector<string>("sm");
+
+// export const creaturesVector = new Array<SampleCreature>();
 
 export function initContract(): void {
   initCreatures();
   initGenerationMap();
-  initSkillsVector();
   initOffspringMap();
+  // initSkillsVector();
 }
 
 function initCreatures(): void {
@@ -100,7 +100,7 @@ function initCreatures(): void {
       creatureData[6],
       creatureData[7]
     );
-    creaturesMap.set(creatureData[6].concat(creatureData[7]), creature);
+    sampleCreaturesMap.set(creatureData[6].concat(creatureData[7]), creature);
     // creaturesVector.push(creature);
   }
 }
@@ -130,45 +130,45 @@ function initGenerationMap(): void {
   }
 }
 
-function initSkillsVector(): void {
-  const skillsData = [
-    "ha",
-    "fg",
-    "wg",
-    "gg",
-    "lg",
-    "dg",
-    "ng",
-    "fs",
-    "fb",
-    "fB",
-    "ws",
-    "wb",
-    "wB",
-    "gs",
-    "gb",
-    "gB",
-    "ls",
-    "lb",
-    "lB",
-    "ds",
-    "db",
-    "dB",
-    "ns",
-    "nb",
-    "nB",
-    "au",
-    "du",
-    "su",
-    "ad",
-    "dd",
-    "sd"
-  ];
+// function initSkillsVector(): void {
+//   const skillsData = [
+//     "ha",
+//     "fg",
+//     "wg",
+//     "gg",
+//     "lg",
+//     "dg",
+//     "ng",
+//     "fs",
+//     "fb",
+//     "fB",
+//     "ws",
+//     "wb",
+//     "wB",
+//     "gs",
+//     "gb",
+//     "gB",
+//     "ls",
+//     "lb",
+//     "lB",
+//     "ds",
+//     "db",
+//     "dB",
+//     "ns",
+//     "nb",
+//     "nB",
+//     "au",
+//     "du",
+//     "su",
+//     "ad",
+//     "dd",
+//     "sd"
+//   ];
 
-  for (let i = 0; i < skillsData.length; i++) {
-    skillsVector.push(skillsData[i]);
-  }
-}
+//   for (let i = 0; i < skillsData.length; i++) {
+//     skillsVector.push(skillsData[i]);
+//   }
+// }
 
 function initOffspringMap(): void {
   const offspringData = [
